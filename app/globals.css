@@ -1,26 +1,216 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-family-serif:  "Cormorant Garamond", serif;
+  --font-family-sans:   "DM Sans", sans-serif;
+  --font-family-accent: "Space Grotesk", sans-serif;
+
+  --color-base: #050508;
+
+  /* ✅ Custom namespace — doesn't nuke Tailwind's violet/cyan scales */
+  --color-brand-violet:  #a78bfa;
+  --color-brand-purple:  #8b5cf6;
+  --color-brand-indigo:  #7C3AED;
+  --color-brand-cyan:    #22d3ee;
+  --color-brand-teal:    #06B6D4;
+  --color-brand-sky:     #0891b2;
+  --color-brand-gold:    #D4A017;
+  --color-brand-amber:   #B8860B;
+  --color-brand-crimson: #E05252;
+  --color-brand-red:     #C0392B;
+
+  /* Design tokens */
+  --color-text-muted:    #94A3B8;
+  --color-text-dimmed:   #8B7D6B;
+  --color-text-bright:   #E8E0D0;
+  --color-border-subtle: rgba(255,255,255,0.08);
+  --color-border-gold:   rgba(212,160,23,0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  /* ✅ prefers-reduced-motion — kills ALL animations globally */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration:        0.01ms !important;
+      animation-iteration-count: 1      !important;
+      transition-duration:       0.01ms !important;
+      scroll-behavior:           auto   !important;
+    }
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* ✅ html ruleset at proper base level */
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;           /* tells browser this is a dark UI */
+  }
+
+  /* ✅ Global focus-visible — keyboard accessibility */
+  :focus-visible {
+    outline:        2px solid rgba(212,160,23,0.8);
+    outline-offset: 3px;
+    border-radius:  4px;
+  }
+
+  ::selection {
+    background: rgba(212,160,23,0.3);
+    color: #F1F5F9;
+  }
+
+  ::-webkit-scrollbar       { width: 6px; }
+  ::-webkit-scrollbar-track { background: #050508; }
+  ::-webkit-scrollbar-thumb {
+    background:    rgba(212,160,23,0.4);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(212,160,23,0.65); /* ✅ hover feedback on scrollbar */
+  }
+
+  /* ─── Keyframes ───────────────────────────────────────── */
+  @keyframes float {
+    0%,100% { transform: translateY(0px);   }
+    50%      { transform: translateY(-20px); }
+  }
+
+  /* ✅ No scale() — opacity-only pulse avoids compositor conflicts */
+  @keyframes glowPulse {
+    0%,100% { opacity: 0.6; }
+    50%      { opacity: 1;   }
+  }
+
+  /* ✅ orbFloat for positional movement (separate from opacity) */
+  @keyframes orbFloat {
+    0%,100% { transform: translateY(0px);    opacity: 1;   }
+    50%      { transform: translateY(-18px); opacity: 0.5; }
+  }
+
+  @keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0);    }
+  }
+
+  @keyframes slideIn {
+    0%   { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0);     }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0);    }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes twinkle {
+    0%,100% { opacity: 0.2; }
+    50%      { opacity: 1;   }
+  }
+
+  @keyframes scrollLine {
+    0%,100% { opacity: 0.2; transform: scaleY(1);    }
+    50%      { opacity: 0.6; transform: scaleY(1.15); }
+  }
+
+  @keyframes eqBar {
+    from { height: 4px;  }
+    to   { height: 16px; }
+  }
+
+  /* ✅ Ping for Spotify now-playing dot */
+  @keyframes ping {
+    75%,100% { transform: scale(2); opacity: 0; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass-card {
+    background:            rgba(255,255,255,0.04);
+    backdrop-filter:       blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border:                1px solid rgba(255,255,255,0.08);
+    border-radius:         1rem;
+    box-shadow:            0 8px 32px rgba(0,0,0,0.6),
+                           inset 0 1px 0 rgba(255,255,255,0.06);
+    /* ✅ Layout containment — browser skips recalc for inner content */
+    contain:               content;
+    transition:            border-color 0.3s, box-shadow 0.3s;
+  }
+
+  /* ✅ Interactive variant — use on <a> and <button> glass cards */
+  .glass-card-interactive {
+    composes: glass-card;
+    /* ✅ GPU layer promotion only for elements that actually animate */
+    will-change: transform;
+  }
+  .glass-card-interactive:hover {
+    background:  rgba(255,255,255,0.06);
+    box-shadow:  0 12px 40px rgba(0,0,0,0.7),
+                 inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 60px rgba(212,160,23,0.4),
+                 0 0 120px rgba(192,57,43,0.2);
+  }
+
+  /* ✅ opacity removed — let each instance control it */
+  .orb {
+    position:       absolute;
+    border-radius:  9999px;
+    filter:         blur(120px);
+    pointer-events: none;
+    will-change:    transform, opacity;
+  }
+
+  .nav-link {
+    font-family:     "Space Grotesk", sans-serif;
+    font-size:       0.875rem;
+    color:           #8B7D6B;
+    text-decoration: none;
+    transition:      color 0.3s;
+    letter-spacing:  0.1em;
+    text-transform:  uppercase;
+  }
+  .nav-link:hover         { color: #E8E0D0; }
+  .nav-link[aria-current] { color: #D4A017; } /* ✅ active nav state */
+
+  .section-tag {
+    font-family:    "Space Grotesk", sans-serif;
+    font-size:      0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color:          #D4A017;
+    display:        block;
+    margin-bottom:  0.75rem;
+  }
+
+  .section-divider {
+    height:     1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(212,160,23,0.3),
+      rgba(192,57,43,0.2),
+      transparent
+    );
+    margin: 0 2rem;
+  }
+
+  /* ✅ New — gradient text utility used across Hero + Contact */
+  .gradient-text {
+    background:              linear-gradient(to right, #a78bfa, #818cf8, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip:         text;
+    color:                   transparent;
+  }
+
+  /* ✅ New — screen-reader only utility */
+  .sr-only {
+    position: absolute;
+    width:    1px;
+    height:   1px;
+    padding:  0;
+    margin:   -1px;
+    overflow: hidden;
+    clip:     rect(0,0,0,0);
+    border:   0;
+  }
 }
