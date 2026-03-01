@@ -222,7 +222,7 @@ export default function LofiPage() {
                 videoId: VIDEO_ID,
                 playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID, playsinline: 1 },
                 events: {
-                    onReady: (e) => { e.target.setVolume(volume); setReady(true); },
+                    onReady: (e: any) => { e.target.setVolume(volume); setReady(true); },
                 },
             });
         };
