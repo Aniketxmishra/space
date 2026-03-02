@@ -113,10 +113,12 @@ export default function Hero() {
               className="flex flex-col lg:flex-row items-start lg:items-end
                          justify-between gap-8 mt-12"
             >
-              <p className="font-sans text-[#94A3B8] text-base max-w-sm leading-relaxed
+              <p className="font-sans text-base max-w-sm leading-relaxed
                             border-l-2 border-violet-500/40 pl-4">
-                Building AI tools, full-stack apps, and things that actually matter.
-                Final year CS @ SRM IST. Currently at Deccan AI.
+                <span className="bg-[#D4A017]/30 text-[#F1F5F9]">
+                  Building AI tools, full-stack apps, and things that actually matter.
+                  Final year CS @ SRM IST. Currently at Deccan AI.
+                </span>
               </p>
 
               <div className="flex gap-3">

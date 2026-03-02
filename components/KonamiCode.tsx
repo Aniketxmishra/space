@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation";
 const KONAMI_SEQUENCE = [
     "ArrowUp", "ArrowUp",
     "ArrowDown", "ArrowDown",
-    "ArrowLeft", "ArrowRight",
-    "ArrowLeft", "ArrowRight",
     "b", "a"
 ];
 
